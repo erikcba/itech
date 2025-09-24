@@ -1,6 +1,10 @@
 import React from 'react'
+import { useStockFaltante } from '../hooks/useStockFaltante'
 
 const Recordatorios = () => {
+
+    const { productosFaltantes } = useStockFaltante()
+    console.log(productosFaltantes.length)
     return (
         <div className='bg-gray-50 p-4 rounded-lg shadow flex flex-col gap-4'>
             <div className='flex flex-col gap-2 mb-4'>
@@ -13,12 +17,28 @@ const Recordatorios = () => {
             </div>
             <div className='flex flex-col gap-2'>
                 <div className='flex flex-col gap-1'>
-                    <p className='text-sm text-red-600 font-semibold'>
-                        Stock bajo
-                    </p>
-                    <p>
-                        4 productos por debajo del stock mínimo
-                    </p>
+                    {
+                        productosFaltantes.length == 0 ? (
+                            <div>
+                                <p>
+                                    Stock de productos:
+                                </p>
+                                <p className='text-md text-green-600 font-semibold'>
+                                    No hay productos sin stock
+                                </p>
+                            </div>
+                        ) : (
+                            <div>
+                                <p className=''>
+                                    Stock de productos:
+                                </p>
+                                <p className='text-md text-red-600 font-semibold'>
+                                    {productosFaltantes.length} productos sin stock
+                                </p>
+                            </div>
+
+                        )
+                    }
                 </div>
                 <div className='flex flex-col gap-1'>
                     <p className='text-sm text-red-600 font-semibold'>

@@ -19,6 +19,8 @@ const Home = () => {
     titulo: "Balance mensual", data: "$6,667", leyenda: "Balance positivo"
   }]
 
+
+
   return (
     <div className='p-6 flex flex-col gap-6'>
       <h1 className='text-3xl font-bold mb-4'>
