@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import MainLayout from './layouts/MainLayout'
+import Stock from './pages/Stock'
 
 function App() {
 
@@ -10,6 +11,11 @@ function App() {
         <MainLayout>
           <Home />
         </MainLayout>} />
+      <Route path='/stock' element={
+        <MainLayout>
+          <Stock/>
+        </MainLayout>} />
+        
     </Routes>
   )
 }
