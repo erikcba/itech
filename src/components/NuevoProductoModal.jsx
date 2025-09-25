@@ -1,7 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { supabase } from '../services/supabaseClient'
+import { useMarcas } from '../hooks/useMarcas'
 
 const NuevoProductoModal = ({ isOpen, onClose }) => {
+
+    const { marcas } = useMarcas()
+
+    const listaMarcas = marcas
+
     const [form, setForm] = useState({
         nombreProd: '',
         codigo: '',
@@ -37,7 +43,7 @@ const NuevoProductoModal = ({ isOpen, onClose }) => {
         } else {
             alert('Producto guardado correctamente')
             onClose()
-        }await supabase.from('categorias').insert([{
+        } await supabase.from('categorias').insert([{
             categoria_nombre: form.categoria
         }])
         setLoading(false)
@@ -64,13 +70,19 @@ const NuevoProductoModal = ({ isOpen, onClose }) => {
                                 className='shadow-sm p-2 rounded focus:outline-blue-600/40 focus:outline-3 focus:shadow-blue-400 focus:shadow-md '
                                 value={form.nombreProd} onChange={handleChange} />
                         </div>
-                        <div className='flex flex-col gap-2'>
+                        <div className='flex flex-col gap-2 w-full'>
                             <label className="font-semibold text-gray-800 text-md" htmlFor="codigo">
                                 Marca
                             </label>
-                            <input name="marca" id="marca" type="text" placeholder='Marca del Producto'
-                                className='shadow-sm p-2 rounded focus:outline-blue-600/40 focus:outline-3 focus:shadow-blue-400 focus:shadow-md'
-                                value={form.marca} onChange={handleChange} />
+                            <select name="marca" id="marca" type="text" placeholder='Marca del Producto'
+                                className='shadow-sm w-full p-2 rounded focus:outline-blue-600/40 focus:outline-3 focus:shadow-blue-400 focus:shadow-md'
+                                value={form.marca} onChange={handleChange} >
+                                    <option value="">Seleccionar...</option>
+                                {listaMarcas.map(marca => (
+                                    <option key={marca.nombre} value={marca.nombre}>{marca.nombre}</option>
+                                ))}
+                            </select>
+
                         </div>
                     </div>
                     <div className='flex flex-row gap-4'>
