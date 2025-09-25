@@ -2,22 +2,32 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../services/supabaseClient'
 
 export function useStock() {
-    const [productos, setProductos] = useState([])
+    const [productosConStock, setProductosConStock] = useState([])
+    const [productosSinStock, setProductosSinStock] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [stock, setStock] = useState([])
+    const [stockTotal, setStockTotal] = useState(0)
+    const productosTotales = productosConStock.length + productosSinStock.length
 
     useEffect(() => {
         const fetchProductos = async () => {
-            const { data, error } = await supabase
+            // Productos con stock > 0
+            const { data: conStock, error: errorConStock } = await supabase
                 .from('productos')
-                .select('stock')
-                .gte('stock', 0)
-            if (error) {
-                setError(error)
+                .select('*')
+                .gt('stock', 0)
+            // Productos con stock == 0
+            const { data: sinStock, error: errorSinStock } = await supabase
+                .from('productos')
+                .select('*')
+                .eq('stock', 0)
+
+            if (errorConStock || errorSinStock) {
+                setError(errorConStock || errorSinStock)
             } else {
-                setProductos(data)
-                setStock(data.map(p => p.stock).reduce((a, b) => a + b, 0))
+                setProductosConStock(conStock)
+                setProductosSinStock(sinStock)
+                setStockTotal(conStock.map(p => p.stock).reduce((a, b) => a + b, 0))
             }
             setLoading(false)
         }
@@ -25,5 +35,5 @@ export function useStock() {
         fetchProductos()
     }, [])
 
-    return { productos, loading, error, stock }
+    return { productosConStock, productosSinStock, loading, error, stockTotal, productosTotales }
 }

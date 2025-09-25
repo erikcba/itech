@@ -1,10 +1,9 @@
 import React from 'react'
-import { useStockFaltante } from '../hooks/useStockFaltante'
+import { useStock } from '../hooks/useStock'
 
 const Recordatorios = () => {
 
-    const { productosFaltantes } = useStockFaltante()
-    console.log(productosFaltantes.length)
+    const { productosSinStock } = useStock()
     return (
         <div className='bg-gray-50 p-4 rounded-lg shadow flex flex-col gap-4'>
             <div className='flex flex-col gap-2 mb-4'>
@@ -18,7 +17,7 @@ const Recordatorios = () => {
             <div className='flex flex-col gap-2'>
                 <div className='flex flex-col gap-1'>
                     {
-                        productosFaltantes.length == 0 ? (
+                        productosSinStock.length == 0 ? (
                             <div>
                                 <p>
                                     Stock de productos:
@@ -33,7 +32,7 @@ const Recordatorios = () => {
                                     Stock de productos:
                                 </p>
                                 <p className='text-md text-red-600 font-semibold'>
-                                    {productosFaltantes.length} productos sin stock
+                                    {productosSinStock.length} productos sin stock
                                 </p>
                             </div>
 
