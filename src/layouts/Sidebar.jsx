@@ -12,6 +12,8 @@ const Sidebar = () => {
     texto: "Gastos", link: "/gastos"
   }, {
     texto: "Stock", link: "/stock"
+  }, {
+    texto: "Clientes", link: "/clientes"
   }]
 
   return (

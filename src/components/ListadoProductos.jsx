@@ -1,10 +1,38 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useStock } from '../hooks/useStock'
+
+const currencyFormatter = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+});
+
+const ProductoFila = ({ producto }) => {
+    const sinStock = producto.stock === 0;
+
+    return (
+        <tr className={`border-b border-b-gray-200 leading-8 ${sinStock ? 'bg-red-100' : ''}`} key={producto.id}>
+            <td className='text-left'>{producto.nombre}</td>
+            <td className='text-right'>
+                {producto.costo === null ? 'N/A' : currencyFormatter.format(producto.costo)}
+            </td>
+            <td className='text-right'>{currencyFormatter.format(producto.precio)}</td>
+            <td className={`text-right ${sinStock ? 'text-red-500 font-semibold' : ''}`}>
+                {producto.stock}
+            </td>
+        </tr>
+    );
+};
 
 const ListadoProductos = () => {
 
     const { productosConStock, productosSinStock } = useStock()
-    const todosLosProductos = [...productosConStock, ...productosSinStock]
+
+    const todosLosProductos = useMemo(() => {
+        // Ordenamos para que los productos sin stock aparezcan al final
+        const conStockOrdenados = [...productosConStock].sort((a, b) => a.nombre.localeCompare(b.nombre));
+        const sinStockOrdenados = [...productosSinStock].sort((a, b) => a.nombre.localeCompare(b.nombre));
+        return [...conStockOrdenados, ...sinStockOrdenados];
+    }, [productosConStock, productosSinStock]);
 
     return (
         <div className='bg-gray-50 p-4 rounded-lg shadow flex flex-col gap-4'>
@@ -21,14 +49,7 @@ const ListadoProductos = () => {
                     </tr>
                 </thead>
                 <tbody >
-                    {todosLosProductos.map(producto => (
-                        <tr className={`border-b border-b-gray-200 leading-8 ${producto.stock === 0 ? 'bg-red-100' : '' }`} key={producto.id}>
-                            <td className='text-left'>{producto.nombre}</td>
-                            <td className='text-right'> {producto.costo === null ? 'N/A' : '$ '+ producto.costo}</td>
-                            <td className='text-right'>$ {producto.precio}</td>
-                            <td className={`text-right ${producto.stock === 0 ? 'text-red-500 font-semibold' : ''} `}>{producto.stock}</td>
-                        </tr>
-                    ))}
+                    {todosLosProductos.map(producto => <ProductoFila key={producto.id} producto={producto} />)}
                 </tbody>
             </table>
         </div>

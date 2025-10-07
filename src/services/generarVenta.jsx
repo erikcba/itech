@@ -6,7 +6,6 @@ const supabase = createClient(
 );
 
 export async function generarVenta(userId, items) {
-  // items debe ser un array de objetos: [{ product_id, quantity, price }]
   const { data, error } = await supabase.rpc("generar_venta", {
     p_user_id: userId,
     p_items: JSON.stringify(items),
